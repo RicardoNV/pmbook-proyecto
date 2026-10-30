@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123a46">
+  <meta name="description" content="Panel de monitoreo de Smart Collar: ubicación y frecuencia cardíaca de tu mascota. Prototipo con datos manuales.">
+
+  <title>Smart Collar · Panel de monitoreo</title>
+
+  <!-- LINKS -->
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/styles.css">
+  <script type="module" src="./assets/js/app.js"></script>
+
+</head>
+<body>
+
+  <!-- Sidebar / Navegacion principal -->
+  <aside id="sidebar" class="sidebar" aria-label="Navegación principal" inert>
+    <div class="sidebar-heading">
+      <div>
+        <p class="eyebrow">SMART COLLAR</p>
+        <h2>Mi espacio</h2>
+      </div>
+      <button id="close-sidebar" class="sidebar-close" type="button" aria-label="Cerrar menú">×</button>
+    </div>
+
+    <!-- Apartados -->
+    <nav class="sidebar-nav" aria-label="Apartados">
+      <a href="#dashboard" class="sidebar-link" data-view="dashboard" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="#mascota" class="sidebar-link" data-view="mascota">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="16" rx="3"/>
+          <circle cx="9" cy="10" r="2"/>
+          <path d="M6 16c0-4 6-4 6 0M15 9h3m-3 4h3"/>
+        </svg>
+        <span>Datos de la mascota</span>
+      </a>
+    </nav>
+
+    <!-- Mascota seleccionada -->
+    <div class="sidebar-pet">
+      <img src="./assets/images/mascota-demo.jpg" width="44" height="44" alt="" data-pet-image>
+      <div>
+        <strong data-pet-name>Max</strong>
+        <span>Perfil de demostración</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Fondo del menu movil -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+  <!-- Contenido de la aplicacion -->
+  <div id="app-frame" class="app-frame">
+
+
+
+  <a href="#main" class="skip-link">Saltar al contenido</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="shell flex items-center justify-between gap-4 py-5">
+
+      <!-- Boton del menu -->
+      <button id="toggle-sidebar" class="menu-toggle" type="button" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <!--Logo  -->
+      <a class="brand" href="./" aria-label="Smart Collar, inicio">
+        <img src="./assets/favicon.svg" width="42" height="42" alt="">
+        <span>smart<span class="font-normal">collar</span><small>CONEXIÓN QUE CUIDA</small></span>
+      </a>
+
+      <!-- Demo Badge -->
+      <span class="demo-badge"><span aria-hidden="true">◉</span>Modo demostración</span>
+    </div>
+
+  </header>
+
+  <!-- Main -->
+  <main id="main" class="shell py-8 md:py-10">
+
+    <!-- Apartado / Dashboard -->
+    <section id="dashboard" aria-labelledby="dashboard-title">
+
+    <!-- Presentacion monitoreo -->
+    <div class="flex flex-wrap items-end justify-between gap-5 mb-7">
+      <div>
+        <p class="eyebrow mb-2">MI MASCOTA / MONITOREO</p>
+        <h1 id="dashboard-title" tabindex="-1">Un vistazo a su día.</h1>
+        <p class="muted mt-2">Su ubicación y su pulso, en un mismo lugar.</p>
+      </div>
+
+      <!-- Capturar lectura -->
+      <button id="open-form" class="button button-primary" type="button">
+        <span aria-hidden="true">＋</span> 
+        Capturar lectura</button>
+    </div>
+
+    <!-- Datos de la Mascota -->
+
+
+    <section class="pet-strip mb-6" aria-label="Mascota del prototipo">
+      <div class="flex items-center gap-4">
+        <div class="pet-avatar" aria-hidden="true">
+          <img src="./assets/images/mascota-demo.jpg" width="52" height="52" alt="" data-pet-image>
+        </div>
+        <div>
+          <h2 class="pet-name"><span data-pet-name>Max</span>
+            <span class="sample-label">Ejemplo</span>
+          </h2>
+          <p id="dashboard-pet-summary" class="muted text-sm">Perro mediano · Collar SC-001</p>
+        </div>
+      </div>
+
+      <!-- Fuente de datos y dispositivo -->
+      <div class="pet-meta">
+        <span class="meta-label">FUENTE DE DATOS</span><strong>Captura manual</strong>
+      </div>
+
+      <div class="pet-meta">
+        <span class="meta-label">DISPOSITIVO</span><strong>Sin vincular</strong>
+      </div>
+
+
+      <span class="session-note">Los cambios duran esta sesión.</span>
+
+    </section>
+
+    <!-- DASHBOARD  -->
+
+    <div class="dashboard-grid">
+      
+
+      <!-- MAPA -->
+      <section class="card map-card" aria-labelledby="location-title">
+
+        <!-- header del mapa -->
+        <div class="card-heading">
+          <div class="flex items-center gap-3">
+            <span class="section-icon" aria-hidden="true">⌖</span>
+            <h2 id="location-title">Ubicación</h2>
+          </div>
+          <span id="location-status" class="status" data-state="empty">Sin datos</span>
+        </div>
+
+
+          <!-- CONTENIDO DEL MAPA -->
+        <div class="map-wrap">
+          <div id="map" aria-label="Mapa de la ubicación registrada de Max">
+
+          </div>
+
+          <div id="map-notice" class="map-notice" role="status" hidden>
+          
+          </div>
+
+          <!-- Boton centrar -->
+          <button id="center-map" class="map-center" type="button" disabled aria-label="Centrar mapa en la ubicación registrada">⌖ 
+            <span>Centrar</span>
+          </button>
+        </div>
+
+        <!-- GRID DE COORDENADAS -->
+        <div class="coordinate-grid">
+          <div>
+
+            <!-- LATITUD -->
+            <span class="meta-label">LATITUD</span><strong id="latitude">—</strong></div>
+            
+            <!-- LONGITUD -->
+            <div>  
+              <span class="meta-label">LONGITUD</span><strong id="longitude">—</strong>
+            </div>
+
+            <!-- Lectura APARTADO -->
+              <div>
+                <span class="meta-label">LECTURA REGISTRADA</span>
+                <time id="location-time">Sin datos</time>
+              </div>
+            </div>
+
+      </section>
+
+
+      <!-- Frecuencia cardiaca -->
+      <section class="card pulse-card" aria-labelledby="pulse-title">
+
+        <!-- Header Frecuencia cardiaca -->
+        <div class="card-heading">
+          <div class="flex items-center gap-3">
+            <span class="heart-icon" aria-hidden="true">♡</span>
+            <h2 id="pulse-title">Frecuencia cardíaca</h2>
+          </div>
+        </div>
+        <!-- Contenido de Frecuencia Cardiaca -->
+        <div class="pulse-content">
+          <span id="pulse-status" class="status" data-state="empty">Sin datos</span>
+
+          <div class="pulse-reading">
+            <strong id="heart-rate">—</strong>
+            <span>lpm</span>
+          </div>
+          <p class="muted text-sm">Latidos por minuto</p>
+          
+          <div class="pulse-divider">
+
+          </div>
+
+          <!-- Lectura registrada -->
+          <div class="flex items-start gap-3">
+            <span class="section-icon" aria-hidden="true">◷</span>
+            <div>
+              <span class="meta-label">LECTURA REGISTRADA</span>
+              <time id="pulse-time">Sin datos</time>
+            </div>
+          </div>
+          <p class="pulse-note">Una lectura describe un momento.<br>Consulta su fecha antes de interpretarla.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Acerca de los datos  -->
+    <section class="info-strip mt-6" aria-label="Acerca de los datos">
+      <span class="info-symbol" aria-hidden="true">i</span>
+      <div>
+        <h2>Estás explorando el prototipo</h2>
+        <p>Los valores son manuales y no representan una conexión en tiempo real. Al cumplir 5 minutos, una lectura se marca como desactualizada.</p>
+      </div>
+      <button id="reset-data" class="text-button" type="button">Restablecer ejemplo 
+        <span aria-hidden="true">↺</span>
+      </button>
+    </section>
+
+    <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Apartado / Datos de la mascota -->
+    <section id="mascota" aria-labelledby="pet-title" hidden>
+
+      <!-- Presentacion de la ficha -->
+      <div class="mb-7">
+        <p class="eyebrow mb-2">MI MASCOTA / PERFIL</p>
+        <h1 id="pet-title" tabindex="-1">Datos de la mascota</h1>
+        <p class="muted mt-2">Su información, siempre a la mano.</p>
+      </div>
+
+      <!-- Ficha de informacion -->
+      <article id="pet-profile" class="card pet-profile" aria-label="Ficha de la mascota">
+        <div class="pet-profile-cover"></div>
+
+        <div class="pet-profile-heading">
+          <div class="pet-portrait">
+            <img src="./assets/images/mascota-demo.jpg" width="136" height="136" alt="Fotografía de un beagle de prueba" data-pet-image>
+          </div>
+          <div class="pet-profile-name">
+            <span class="sample-label">Perfil de ejemplo</span>
+            <h2 data-pet-name>Max</h2>
+            <p id="pet-breed-summary" class="muted">Beagle · Macho</p>
+          </div>
+
+          <!-- Acciones provisionales -->
+          <div class="pet-profile-actions">
+            <button id="edit-pet" class="button button-primary" type="button">Editar datos</button>
+            <button id="delete-pet" class="button button-danger" type="button">Eliminar</button>
+          </div>
+        </div>
+
+        <!-- Datos registrados -->
+        <dl class="pet-details">
+          <div>
+            <dt>Nombre</dt>
+            <dd data-profile="name">Max</dd>
+          </div>
+          <div>
+            <dt>Raza</dt>
+            <dd data-profile="breed">Beagle</dd>
+          </div>
+          <div>
+            <dt>Edad</dt>
+            <dd data-profile="age">3 años</dd>
+          </div>
+          <div>
+            <dt>Sexo</dt>
+            <dd data-profile="sex">Macho</dd>
+          </div>
+          <div>
+            <dt>Peso</dt>
+            <dd data-profile="weight">14 kg</dd>
+          </div>
+          <div>
+            <dt>Tamaño</dt>
+            <dd>Mediano</dd>
+          </div>
+          <div>
+            <dt>Color del pelaje</dt>
+            <dd data-profile="color">Tricolor</dd>
+          </div>
+          <div>
+            <dt>Responsable</dt>
+            <dd data-profile="owner">Ana López</dd>
+          </div>
+          <div>
+            <dt>Identificador del collar</dt>
+            <dd data-profile="collar">SC-001</dd>
+          </div>
+        </dl>
+
+        <!-- Pie de la ficha -->
+        <div class="pet-profile-footer">
+          <p>Los cambios y la eliminación solo aplican durante esta sesión.</p>
+          <a href="https://www.pexels.com/photo/close-up-photo-of-beagle-8336043/" target="_blank" rel="noopener noreferrer">Foto: Lera Mk / Pexels</a>
+        </div>
+      </article>
+
+      <!-- Estado sin mascota -->
+      <div id="pet-empty" class="card pet-empty" hidden>
+        <img src="./assets/favicon.svg" width="64" height="64" alt="">
+        <h2>No hay una mascota registrada</h2>
+        <p class="muted">El perfil se eliminó de esta sesión. Puedes recuperar los datos de prueba.</p>
+        <button id="restore-pet" class="button button-primary" type="button">Restaurar mascota de ejemplo</button>
+      </div>
+
+      <p id="pet-feedback" class="feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Pie de Pagina -->
+    <footer class="footer">
+      <span>SMART COLLAR 
+        <span class="footer-dot">/</span> PROTOTIPO 01</span><p>Monitoreo para perros medianos. No sustituye la valoración veterinaria.</p>
+      </footer>
+    <noscript>
+      <p class="error-banner">Activa JavaScript para capturar y visualizar lecturas. Este prototipo no recibe datos reales del collar.</p>
+    </noscript>
+  </main>
+  </div>
+
+  <!-- Dialogo abierto  -->
+  <dialog id="reading-dialog" aria-labelledby="form-title" aria-describedby="form-description">
+
+    <form id="reading-form" novalidate>
+
+      <!-- Header FORMS -->
+      <div class="flex items-center justify-between gap-4">
+        <p class="eyebrow">DATOS DEL PROTOTIPO</p>
+        <button id="close-form" type="button" class="close-button" aria-label="Cerrar captura">×</button>
+      </div>
+      
+      <h2 id="form-title" class="dialog-title">Capturar lectura</h2>
+      <p id="form-description" class="muted mt-2 mb-6">Actualiza la ubicación, el pulso o ambos. Los campos vacíos permiten probar el estado sin datos.</p>
+
+      <!-- Inicio del forms  -->
+
+
+      <fieldset>
+
+        <!-- GPS -->
+        <legend>Ubicación GPS</legend>
+        <div class="form-grid">
+
+          <div>
+            <label for="input-latitude">Latitud</label>
+            <input id="input-latitude" name="latitude" type="number" step="any" min="-90" max="90" placeholder="25.725000" aria-describedby="error-latitude">
+            <p id="error-latitude" class="field-error"></p></div>
+            <div>
+              <label for="input-longitude">Longitud</label>
+              <input id="input-longitude" name="longitude" type="number" step="any" min="-180" max="180" placeholder="-100.315000" aria-describedby="error-longitude">
+              <p id="error-longitude" class="field-error"></p>
+            </div>
+          </div>
+          
+          <label for="input-locationAt">Fecha y hora de ubicación</label><input id="input-locationAt" name="locationAt" type="datetime-local" aria-describedby="error-locationAt">
+          <p id="error-locationAt" class="field-error"></p>
+        
+      </fieldset>
+
+      <!-- Frecuencia cardiaca -->
+      <fieldset>
+        <legend>Frecuencia cardíaca</legend>
+        <label for="input-heartRate">Pulso (lpm)</label>
+        <input id="input-heartRate" name="heartRate" type="number" step="1" min="1" placeholder="84" aria-describedby="pulse-help error-heartRate">
+        <p id="pulse-help" class="field-help">Número entero positivo. No se aplica una clasificación médica.</p>
+        <p id="error-heartRate" class="field-error"></p>
+        <label for="input-heartAt">Fecha y hora del pulso</label>
+        <input id="input-heartAt" name="heartAt" type="datetime-local" aria-describedby="error-heartAt">
+        <p id="error-heartAt" class="field-error"></p>
+      </fieldset>
+
+
+      <!-- Pie de pagina  -->
+      <p class="field-help mb-5">Las horas corresponden a la zona horaria de tu dispositivo.</p>
+      <div class="dialog-actions">
+        <button id="clear-fields" type="button" class="text-button">Vaciar campos</button>
+        <div class="flex gap-3">
+        <button id="cancel-form" type="button" class="button button-secondary">Cancelar</button>
+        <button type="submit" class="button button-primary">Guardar lectura</button>
+      </div></div>
+    </form>
+  </dialog>
+
+  <!-- Dialog / Editar datos de la mascota -->
+  <dialog id="pet-dialog" aria-labelledby="pet-form-title" aria-describedby="pet-form-description">
+    <form id="pet-form">
+
+      <!-- Encabezado del formulario -->
+      <div class="flex items-center justify-between gap-4">
+        <p class="eyebrow">PERFIL DE LA MASCOTA</p>
+        <button id="close-pet-form" class="close-button" type="button" aria-label="Cerrar edición">×</button>
+      </div>
+      <h2 id="pet-form-title" class="dialog-title">Editar datos</h2>
+      <p id="pet-form-description" class="muted mt-2 mb-6">Los campos muestran los datos actuales. Guarda los cambios para actualizar la ficha.</p>
+
+      <!-- Identificacion -->
+      <fieldset>
+        <legend>Información de la mascota</legend>
+        <div class="form-grid">
+          <div>
+            <label for="pet-input-name">Nombre</label>
+            <input id="pet-input-name" name="name" type="text" required maxlength="40">
+          </div>
+          <div>
+            <label for="pet-input-breed">Raza</label>
+            <input id="pet-input-breed" name="breed" type="text" required maxlength="60">
+          </div>
+          <div>
+            <label for="pet-input-age">Edad (años)</label>
+            <input id="pet-input-age" name="age" type="number" required min="0" max="30" step="1">
+          </div>
+          <div>
+            <label for="pet-input-sex">Sexo</label>
+            <select id="pet-input-sex" name="sex" required>
+              <option value="Macho">Macho</option>
+              <option value="Hembra">Hembra</option>
+            </select>
+          </div>
+          <div>
+            <label for="pet-input-weight">Peso (kg)</label>
+            <input id="pet-input-weight" name="weight" type="number" required min="0.1" max="100" step="0.1">
+          </div>
+          <div>
+            <label for="pet-input-color">Color del pelaje</label>
+            <input id="pet-input-color" name="color" type="text" required maxlength="60">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Responsable y collar -->
+      <fieldset>
+        <legend>Responsable y dispositivo</legend>
+        <div class="form-grid">
+          <div>
+            <label for="pet-input-owner">Responsable</label>
+            <input id="pet-input-owner" name="owner" type="text" required maxlength="80">
+          </div>
+          <div>
+            <label for="pet-input-collar">Identificador del collar</label>
+            <input id="pet-input-collar" name="collar" type="text" required maxlength="30">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Acciones del formulario -->
+      <p class="field-help mb-5">Datos de prueba. La fotografía y el tamaño mediano permanecen fijos en esta etapa.</p>
+      <div class="pet-dialog-actions">
+        <button id="cancel-pet-form" class="button button-secondary" type="button">Cancelar</button>
+        <button class="button button-primary" type="submit">Guardar cambios</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Dialog / Eliminacion provisional -->
+  <dialog id="delete-pet-dialog" aria-labelledby="delete-pet-title" aria-describedby="delete-pet-description">
+    <h2 id="delete-pet-title" class="dialog-title">Eliminar mascota</h2>
+    <p id="delete-pet-description" class="muted mt-3 mb-6">Se quitarán el perfil y sus lecturas de esta sesión. Puedes restaurar el ejemplo después.</p>
+    <div class="pet-dialog-actions">
+      <button id="cancel-delete-pet" class="button button-secondary" type="button" autofocus>Cancelar</button>
+      <button id="confirm-delete-pet" class="button button-danger" type="button">Eliminar de la sesión</button>
+    </div>
+  </dialog>
+</body>
+</html>
