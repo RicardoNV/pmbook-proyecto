@@ -1,0 +1,1 @@
+v0.4.0 En esta version se modifico uno de los textos dentro del HTML, esto para generar el control de cambios.
