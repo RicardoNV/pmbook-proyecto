@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @source "../index.html";
+@source "../login.html";
 @source "../assets/js/*.js";
 
 @theme { --font-sans: "Segoe UI", system-ui, sans-serif; }

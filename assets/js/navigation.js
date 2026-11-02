@@ -97,7 +97,7 @@ export function initializeNavigation(onDashboardVisible) {
 
     if (event.key === 'Tab' && mobile.matches) {
       const first = close;
-      const last = links.at(-1);
+      const last = sidebar.querySelector('a[href="./login.html"]');
 
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();

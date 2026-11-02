@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123a46">
+  <meta name="description" content="Acceso a Smart Collar. Un espacio para cuidar de tu mejor compañía.">
+  <title>Smart Collar · Iniciar sesión</title>
+
+  <!-- Recursos / Interfaz de acceso -->
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/styles.css">
+  <link rel="stylesheet" href="./src/auth.css">
+  <script type="module" src="./assets/js/auth.js"></script>
+</head>
+<body class="auth-page">
+  <a href="#auth-content" class="skip-link">Saltar al formulario</a>
+
+  <!-- Encabezado / Marca y acceso al prototipo -->
+  <header class="auth-header">
+    <a class="brand" href="./login.html" aria-label="Smart Collar, inicio de sesión">
+      <img src="./assets/favicon.svg" width="42" height="42" alt="">
+      <span>smart<span class="font-normal">collar</span><small>CONEXIÓN QUE CUIDA</small></span>
+    </a>
+    <a href="./index.html#dashboard" class="auth-demo-link">Explorar demo <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="auth-layout">
+
+    <!-- Bienvenida / Identidad visual del mundo de las mascotas -->
+    <section class="auth-story" aria-labelledby="story-title">
+      <span class="auth-story-label">PARA QUIENES SON PARTE DE LA FAMILIA</span>
+      <h1 id="story-title">Más momentos juntos.<br><span>Más tranquilidad.</span></h1>
+      <p>Un paseo, una siesta, una nueva aventura. Acompaña su día con Smart Collar.</p>
+
+      <figure class="auth-pet-photo">
+        <!-- Fotografias / Cambio suave sin alterar el tamaño del contenedor -->
+        <img class="auth-slide is-active" src="./assets/images/mascota-demo.jpg" width="600" height="900" alt="Un beagle de mirada curiosa disfrutando de una pausa" fetchpriority="high" data-credit="Lera Mk / Pexels" data-source="https://www.pexels.com/photo/close-up-photo-of-beagle-8336043/">
+        <img class="auth-slide" src="./assets/images/perrito-exterior.jpg" width="600" height="400" alt="Un beagle mirando a la cámara al aire libre" aria-hidden="true" decoding="async" data-credit="Pexels User / Pexels" data-source="https://www.pexels.com/photo/portrait-of-a-beagle-dog-sitting-outside-16902552/">
+        <img class="auth-slide" src="./assets/images/perrito-estudio.jpg" width="600" height="900" alt="Un beagle juguetón en una fotografía en blanco y negro" aria-hidden="true" decoding="async" data-credit="Benoit Vacherie / Pexels" data-source="https://www.pexels.com/photo/playful-beagle-dog-in-studio-portrait-33374524/">
+        <figcaption><span aria-hidden="true">♡</span> Tu mejor compañía, un poquito más cerca.</figcaption>
+      </figure>
+
+      <div class="auth-story-footer">
+        <img src="./assets/favicon.svg" width="34" height="34" alt="">
+        <span>Pequeño collar.<br>Un gran vínculo.</span>
+        <a id="auth-photo-credit" href="https://www.pexels.com/photo/close-up-photo-of-beagle-8336043/" target="_blank" rel="noopener noreferrer">Foto: Lera Mk / Pexels</a>
+      </div>
+      <button id="auth-slideshow-toggle" class="auth-slideshow-toggle" type="button" aria-pressed="false" hidden>Pausar fotos</button>
+    </section>
+
+    <!-- Formularios / Inicio de sesion, registro y recuperacion -->
+    <section id="auth-content" class="auth-content" aria-label="Acceso a Smart Collar" tabindex="-1">
+      <div class="auth-mode-label"><span aria-hidden="true">◌</span> Vista previa del acceso</div>
+
+      <!-- Inicio de sesion -->
+      <section data-auth-view="login" aria-labelledby="login-title">
+        <p class="auth-eyebrow">¡QUÉ GUSTO VERTE!</p>
+        <h2 id="login-title" class="auth-title" tabindex="-1">De vuelta a su mundo.</h2>
+        <p class="auth-description">Inicia sesión para seguir cerca de tu mascota.</p>
+
+        <form id="login-form" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="login-email">Correo electrónico</label>
+            <input id="login-email" name="email" type="email" autocomplete="username" inputmode="email" placeholder="tu@correo.com" required maxlength="254" aria-describedby="login-email-error">
+            <p id="login-email-error" class="auth-error"></p>
+          </div>
+          <div class="auth-field">
+            <label for="login-password">Contraseña</label>
+            <div class="auth-password">
+              <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Tu contraseña" required aria-describedby="login-password-error">
+              <button type="button" data-password-toggle="login-password" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button>
+            </div>
+            <p id="login-password-error" class="auth-error"></p>
+          </div>
+          <div class="auth-recovery-link"><a href="#recuperar">¿Olvidaste tu contraseña?</a></div>
+          <button class="button button-primary auth-submit" type="submit">Iniciar sesión <span aria-hidden="true">→</span></button>
+          <p class="auth-result" role="status" aria-live="polite"></p>
+        </form>
+        <p class="auth-switch">¿Nuevo por aquí? <a href="#registro">Crear una cuenta</a></p>
+      </section>
+
+      <!-- Registro de cuenta -->
+      <section data-auth-view="registro" aria-labelledby="register-title" hidden>
+        <p class="auth-eyebrow">UN NUEVO COMIENZO JUNTOS</p>
+        <h2 id="register-title" class="auth-title" tabindex="-1">Hazle un espacio.</h2>
+        <p class="auth-description">Crea tu cuenta para empezar a acompañar sus aventuras.</p>
+
+        <form id="register-form" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="register-name">Tu nombre</label>
+            <input id="register-name" name="name" type="text" autocomplete="name" placeholder="¿Cómo te llamas?" required maxlength="80" aria-describedby="register-name-error">
+            <p id="register-name-error" class="auth-error"></p>
+          </div>
+          <div class="auth-field">
+            <label for="register-email">Correo electrónico</label>
+            <input id="register-email" name="email" type="email" autocomplete="username" inputmode="email" placeholder="tu@correo.com" required maxlength="254" aria-describedby="register-email-error">
+            <p id="register-email-error" class="auth-error"></p>
+          </div>
+          <div class="auth-field">
+            <label for="register-password">Contraseña</label>
+            <div class="auth-password">
+              <input id="register-password" name="password" type="password" autocomplete="new-password" placeholder="Crea una contraseña" required minlength="8" aria-describedby="password-hint register-password-error">
+              <button type="button" data-password-toggle="register-password" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button>
+            </div>
+            <p id="password-hint" class="auth-hint">Al menos 8 caracteres para esta demostración.</p>
+            <p id="register-password-error" class="auth-error"></p>
+          </div>
+          <div class="auth-field">
+            <label for="register-confirm">Confirmar contraseña</label>
+            <div class="auth-password">
+              <input id="register-confirm" name="confirm" type="password" autocomplete="new-password" placeholder="Escríbela de nuevo" required aria-describedby="register-confirm-error">
+              <button type="button" data-password-toggle="register-confirm" aria-label="Mostrar confirmación de contraseña" aria-pressed="false">Mostrar</button>
+            </div>
+            <p id="register-confirm-error" class="auth-error"></p>
+          </div>
+          <button class="button button-primary auth-submit" type="submit">Crear cuenta <span aria-hidden="true">→</span></button>
+          <p class="auth-result" role="status" aria-live="polite"></p>
+        </form>
+        <p class="auth-switch">¿Ya tienes cuenta? <a href="#login">Iniciar sesión</a></p>
+      </section>
+
+      <!-- Recuperacion / No se envian correos en esta etapa -->
+      <section data-auth-view="recuperar" aria-labelledby="recovery-title" hidden>
+        <a href="#login" class="auth-back">← Volver al inicio de sesión</a>
+        <p class="auth-eyebrow">VOLVAMOS A CONECTAR</p>
+        <h2 id="recovery-title" class="auth-title" tabindex="-1">¿Una pequeña pausa?</h2>
+        <p class="auth-description">Indica el correo de tu cuenta para solicitar un enlace de recuperación.</p>
+
+        <form id="recovery-form" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label for="recovery-email">Correo electrónico</label>
+            <input id="recovery-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="tu@correo.com" required maxlength="254" aria-describedby="recovery-email-error">
+            <p id="recovery-email-error" class="auth-error"></p>
+          </div>
+          <button class="button button-primary auth-submit" type="submit">Solicitar enlace <span aria-hidden="true">→</span></button>
+          <p class="auth-result" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- Aviso del prototipo -->
+      <aside class="auth-preview-note">
+        <strong>Estamos preparando su próxima aventura.</strong>
+        <p>Esta es una demostración visual. No se crean cuentas, no se inicia sesión ni se envían correos. Usa datos de prueba.</p>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="auth-footer">Hecho para cuidar lo que más quieres. <span>Smart Collar · Prototipo</span></footer>
+  <noscript><p class="error-banner">Activa JavaScript para explorar los formularios de esta demostración.</p></noscript>
+</body>
+</html>

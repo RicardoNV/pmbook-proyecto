@@ -29,6 +29,9 @@ El servidor de desarrollo solo escucha en el equipo local. Los puertos son fijos
 ## Archivos
 
 - `index.html`: estructura del panel y formulario accesible.
+- `login.html`: pantalla independiente de acceso, registro y recuperación.
+- `src/auth.css`: diseño responsive de los formularios de acceso.
+- `assets/js/auth.js`: navegación, visibilidad de contraseñas y validaciones del prototipo.
 - `src/styles.css`: entrada de Tailwind, colores, componentes y diseño adaptable.
 - `vite.config.js`: integración de Tailwind, puertos y rutas relativas de compilación.
 - `dist/`: resultado generado por Vite; no editar directamente ni incluir en Git.
@@ -45,6 +48,18 @@ El servidor de desarrollo solo escucha en el equipo local. Los puertos son fijos
 Durante el desarrollo basta con mantener `npm run dev` abierto. Ejecuta `npm run build` cuando necesites actualizar `dist/`. Ejecuta las pruebas con `npm test`.
 
 ## Uso
+
+### Vista previa del inicio de sesion
+
+Abre `/login.html` en el servidor de Vite; con el puerto actual, http://127.0.0.1:5174/login.html. También puedes entrar desde **Inicio de sesión** en el sidebar del Dashboard y volver mediante **Explorar demo**.
+
+La pantalla incluye acceso por correo y contraseña, registro con nombre y confirmación de contraseña, y solicitud de recuperación. Los formularios validan campos obligatorios, formato de correo y coincidencia de contraseñas. El mínimo de 8 caracteres del registro es provisional para el diseño, no una política configurada en Supabase.
+
+Esta etapa no conecta Supabase, no crea usuarios, no envía correos y no protege el Dashboard. Los mensajes de envío indican expresamente esa limitación. No se almacenan ni registran credenciales; los campos se limpian al cambiar entre apartados. Utiliza datos ficticios para las pruebas.
+
+Vite compila tanto `index.html` como `login.html` en `dist/`. El acceso es una página separada para no cargar Leaflet ni la lógica del panel mientras se exploran sus formularios.
+
+### Panel de monitoreo
 
 1. El panel inicia con coordenadas de ejemplo en el área de San Nicolás de los Garza y 84 lpm; ambas fechas corresponden al momento de abrirlo.
 2. Capturar lectura abre el formulario con los valores actuales. Introduce coordenadas y pulso con sus fechas independientes.
