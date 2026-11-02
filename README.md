@@ -69,7 +69,7 @@ Vite compila tanto `index.html` como `login.html` en `dist/`. El acceso es una p
 
 Las fechas usan la zona horaria del navegador. Una lectura pasa a desactualizada al cumplir cinco minutos: es una regla demostrativa de frescura, no un criterio clínico ni una frecuencia confirmada del hardware. El temporizador solo se programa para el próximo vencimiento y se suspende cuando la pestaña queda oculta.
 
-No hay base de datos, almacenamiento persistente, autenticación ni comunicación con el collar. Recargar vuelve a los ejemplos.
+El panel conserva datos de ejemplo en memoria y no se comunica con el collar. Recargar vuelve a los ejemplos. El registro de cuentas en login.html utiliza Supabase Auth.
 
 ### Usar la ubicacion del equipo como prueba
 
@@ -95,8 +95,28 @@ Leaflet 1.9.4 se sirve localmente. La cartografía se solicita por HTTPS a OpenS
 
 Antes de publicar o escalar, revisar la política del proveedor y elegir un servicio adecuado al tráfico: https://operations.osmfoundation.org/policies/tiles/. No se ha publicado este proyecto.
 
+## Supabase / Paso 1: configuracion del cliente
+
+La conexion con Supabase Auth se configura en `.env.local`, excluido de Git. Para preparar otra computadora, copia `.env.example` como `.env.local`, completa la URL y la clave publicable del proyecto e instala las dependencias con `npm install`. Reinicia Vite despues de cambiar estas variables.
+
+`assets/js/supabase.js` exporta una instancia compartida del cliente oficial. Se carga al registrar una cuenta o procesar el enlace de confirmacion. El inicio de sesion usa signInWithPassword; la recuperacion sigue siendo demostrativa. El registro envia email, password y full_name (metadatos) mediante signUp, con retorno a login.html en el origen actual.
+
+Ejecuta `node scripts/check-supabase.js` para comprobar la conexion y consultar la configuracion publica de Auth. Esta comprobacion no crea usuarios ni modifica datos.
+
+Las variables `VITE_` se incluyen en el frontend al compilar. Usa solo la clave publicable; nunca una clave secreta, `service_role` ni la contraseña de la base de datos. Cuando se agreguen tablas de mascotas y lecturas, sus permisos se definiran mediante RLS.
+
 ## Integración futura
 
 El estado separa `location: { latitude, longitude, recordedAt }` y `pulse: { bpm, recordedAt }`; cualquiera puede ser `null`. Las fechas internas son ISO 8601. Esta separación permite sustituir los datos manuales cuando se definan los modelos de GPS, PPG, placa y protocolo del collar. No se inventan batería, diagnósticos, precisión ni conectividad real.
 
 El criterio del acta de respuesta menor a dos segundos y las pruebas físicas del sistema requieren medición posterior en condiciones definidas; no se consideran certificados por este prototipo.
+
+## Inicio y cierre de sesion
+
+El login envia correo y contraseña a Supabase. Al aceptar las credenciales abre index.html. El SDK conserva los tokens en el almacenamiento local del navegador y renueva la sesion; la aplicacion no guarda contraseñas. Cada origen (localhost, 127.0.0.1 y Netlify) mantiene su propia sesion.
+
+El panel consulta getUser para verificar la identidad y muestra el correo mediante textContent. Cerrar sesion usa signOut con scope local y regresa al login; no cierra sesiones en otros dispositivos. Los cambios de sesion se escuchan mediante onAuthStateChange.
+
+El panel continua disponible como demo publica sin sesion. Sus datos de mascota y lecturas siguen en memoria, no pertenecen a la cuenta. Antes de conectar datos reales se requieren tablas y politicas RLS por usuario; la interfaz no sustituye esos permisos.
+
+Prueba manual: inicia sesion con un correo confirmado, recarga el panel, verifica el correo mostrado y cierra sesion desde el menu lateral. Una contraseña incorrecta o un correo sin confirmar deben mostrar el mensaje correspondiente. Para Netlify manual, ejecuta npm run build y sube dist otra vez.

@@ -3,3 +3,8 @@ dist/
 .npm-cache/
 .qa/
 *.log
+
+# Configuracion local / La plantilla si se comparte.
+.env
+.env.*
+!.env.example

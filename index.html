@@ -12,6 +12,7 @@
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./src/styles.css">
   <script type="module" src="./assets/js/app.js"></script>
+  <script type="module" src="./assets/js/session.js"></script>
 
 </head>
 <body>
@@ -49,7 +50,8 @@
     </nav>
 
     <!-- Vista previa / Acceso y registro -->
-    <a href="./login.html" class="sidebar-link mt-6">Inicio de sesión ↗</a>
+    <a id="account-login" href="./login.html" class="sidebar-link mt-6">Inicio de sesión ↗</a>
+    <button id="logout-button" class="sidebar-link mt-6" type="button" hidden>Cerrar sesión</button>
 
     <!-- Mascota seleccionada -->
     <div class="sidebar-pet">
@@ -96,6 +98,10 @@
 
   <!-- Main -->
   <main id="main" class="shell py-8 md:py-10">
+
+    <!-- Cuenta / Identidad separada de los datos de demostracion -->
+    <p id="account-status" class="muted mb-2" style="overflow-wrap: anywhere;" role="status">Comprobando sesión…</p>
+    <p id="session-message" class="muted mb-6" role="status"></p>
 
     <!-- Apartado / Dashboard -->
     <section id="dashboard" aria-labelledby="dashboard-title">
