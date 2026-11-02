@@ -54,7 +54,15 @@ Durante el desarrollo basta con mantener `npm run dev` abierto. Ejecuta `npm run
 
 Las fechas usan la zona horaria del navegador. Una lectura pasa a desactualizada al cumplir cinco minutos: es una regla demostrativa de frescura, no un criterio clínico ni una frecuencia confirmada del hardware. El temporizador solo se programa para el próximo vencimiento y se suspende cuando la pestaña queda oculta.
 
-No hay base de datos, almacenamiento persistente, autenticación ni comunicación con el collar. Recargar vuelve a los ejemplos. Nunca se utiliza la geolocalización del navegador como sustituto de la ubicación de la mascota.
+No hay base de datos, almacenamiento persistente, autenticación ni comunicación con el collar. Recargar vuelve a los ejemplos.
+
+### Usar la ubicacion del equipo como prueba
+
+En Capturar lectura, el botón **Usar mi ubicación** solicita permiso al navegador y rellena latitud, longitud y fecha con la ubicación del equipo. Muestra la precisión estimada en metros. Pulsa **Guardar lectura** para actualizar el mapa; cancelar mantiene los datos anteriores. El pulso no se modifica por esta consulta.
+
+Esta ubicación es un dato de prueba, no una medición del collar. La consulta se realiza una sola vez por clic, sin seguimiento continuo ni solicitud de alta precisión. Necesita HTTPS o un origen local confiable como `http://127.0.0.1:5173`; la disponibilidad y precisión dependen del dispositivo y del navegador. Se comunican los errores de permiso, posición no disponible y tiempo de espera. Si cierras, vacías o editas el formulario mientras se espera, una respuesta tardía no sustituye los campos.
+
+Las coordenadas obtenidas permanecen en memoria: no se escriben en archivos ni se incluyen en Git. Al guardar, el mapa solicita las teselas correspondientes al proveedor de cartografía.
 
 ## Barra lateral y perfil de la mascota
 

@@ -1,6 +1,6 @@
 {
   "name": "smart-collar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Prototipo frontend de Smart Collar con captura manual de lecturas.",
