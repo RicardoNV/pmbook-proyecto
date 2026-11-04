@@ -83,11 +83,13 @@ Las coordenadas obtenidas permanecen en memoria: no se escriben en archivos ni s
 
 La navegación tiene dos apartados: `#dashboard` y `#mascota`. Cambiar de apartado conserva los datos durante la sesión y permite utilizar los botones Atrás y Adelante del navegador. La barra se puede contraer en escritorio; en pantallas de hasta 1100 px se convierte en un menú deslizante con fondo oscurecido, foco contenido y cierre con Escape, botón o clic fuera. Las animaciones respetan la preferencia de movimiento reducido.
 
-La ficha muestra a Max, un beagle de ejemplo, con nombre, raza, edad, sexo, peso, tamaño, pelaje, responsable y collar. Editar datos precarga los valores actuales y abre un diálogo nativo con `showModal()`, siguiendo el mismo mecanismo del formulario de lecturas. Guardar sincroniza la ficha, la barra lateral y la identificación en el Dashboard y el mapa. Cancelar o Escape descarta la edición. La fotografía y el tamaño mediano son fijos en esta etapa.
+Las mascotas se guardan en Supabase y pertenecen a la cuenta autenticada. Una cuenta sin mascotas abre el formulario de creacion; el selector permite administrar varias. La ficha, la barra lateral y el resumen del dashboard muestran la mascota seleccionada.
 
-Eliminar pide confirmación y quita el perfil y sus lecturas solo de la memoria de la sesión. La captura queda deshabilitada hasta restaurar la mascota de ejemplo. Restaurar recupera el perfil y las lecturas iniciales con fecha actual. Recargar también recupera los datos originales.
+El formulario permite crear, editar y cargar o quitar una foto. Las fotos JPEG, PNG o WebP de hasta 10 MB se convierten a JPEG de hasta 600 px y 350000 caracteres antes de guardarse. La foto y la ficha comparten fila: su guardado y eliminacion son atomicos. La lista de mascotas no descarga fotos; solo se consulta la de la seleccionada.
 
-Foto de prueba: [Lera Mk, Close-up Photo of Beagle, Pexels](https://www.pexels.com/photo/close-up-photo-of-beagle-8336043/), utilizada bajo la [licencia de Pexels](https://www.pexels.com/license/). Se guarda localmente una versión de 600 px de ancho para que la ficha no dependa de solicitudes de imagen externas.
+Eliminar exige confirmacion y elimina permanentemente la fila y su foto. Los modelos Demo Mini, Demo Classic y Demo Plus son referencias ficticias. No hay conexion ni modificaciones sobre dispositivos reales. Las lecturas continuan siendo demostrativas.
+
+Instalacion y pruebas: consulta [docs/mascotas.md](docs/mascotas.md).
 
 ## Mapa y conectividad
 
@@ -117,6 +119,6 @@ El login envia correo y contraseña a Supabase. Al aceptar las credenciales abre
 
 El panel consulta getUser para verificar la identidad y muestra el correo mediante textContent. Cerrar sesion usa signOut con scope local y regresa al login; no cierra sesiones en otros dispositivos. Los cambios de sesion se escuchan mediante onAuthStateChange.
 
-El panel continua disponible como demo publica sin sesion. Sus datos de mascota y lecturas siguen en memoria, no pertenecen a la cuenta. Antes de conectar datos reales se requieren tablas y politicas RLS por usuario; la interfaz no sustituye esos permisos.
+El panel puede abrirse sin sesion, pero no consulta ni permite editar mascotas. Las fichas reales requieren autenticacion y la tabla pets aplica RLS por usuario. Las lecturas siguen siendo ejemplos en memoria.
 
 Prueba manual: inicia sesion con un correo confirmado, recarga el panel, verifica el correo mostrado y cierra sesion desde el menu lateral. Una contraseña incorrecta o un correo sin confirmar deben mostrar el mensaje correspondiente. Para Netlify manual, ejecuta npm run build y sube dist otra vez.

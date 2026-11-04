@@ -2,11 +2,20 @@
 // Sesion / Identidad verificada y cierre en este navegador
 // ==================================================
 
-const account = document.querySelector('#account-status');
 const logout = document.querySelector('#logout-button');
 const loginLink = document.querySelector('#account-login');
 const message = document.querySelector('#session-message');
+const accountName = document.querySelector('#account-name');
+const logoutDialog = document.querySelector('#logout-dialog');
+const confirmLogout = document.querySelector('#confirm-logout');
+const cancelLogout = document.querySelector('#cancel-logout');
+const logoutError = document.querySelector('#logout-error');
 let revision = 0;
+
+logout.addEventListener('click', () => { logoutError.textContent = ''; logoutDialog.showModal(); });
+cancelLogout.addEventListener('click', () => logoutDialog.close());
+logoutDialog.addEventListener('cancel', event => { if (confirmLogout.disabled) event.preventDefault(); });
+logoutDialog.addEventListener('close', () => logout.focus());
 
 async function initializeSession() {
   try {
@@ -22,20 +31,22 @@ async function initializeSession() {
       }
     });
 
-    logout.addEventListener('click', async () => {
-      if (logout.disabled) return;
-      logout.disabled = true;
-      logout.textContent = 'Cerrando sesión…';
+    confirmLogout.addEventListener('click', async () => {
+      if (confirmLogout.disabled) return;
+      confirmLogout.disabled = true;
+      cancelLogout.disabled = true;
+      confirmLogout.textContent = 'Cerrando sesión…';
       message.textContent = '';
       try {
         const { error } = await supabase.auth.signOut({ scope: 'local' });
         if (error) throw error;
         window.location.replace('./login.html');
       } catch {
-        message.textContent = 'No se pudo cerrar la sesión. Revisa tu conexión y vuelve a intentar.';
+        logoutError.textContent = 'No se pudo cerrar la sesión. Revisa tu conexión y vuelve a intentar.';
       } finally {
-        logout.disabled = false;
-        logout.textContent = 'Cerrar sesión';
+        confirmLogout.disabled = false;
+        cancelLogout.disabled = false;
+        confirmLogout.textContent = 'Cerrar sesión';
       }
     });
 
@@ -47,7 +58,7 @@ async function initializeSession() {
 }
 
 function showGuest() {
-  account.textContent = 'Modo demostración · Sin sesión';
+  accountName.textContent = 'Invitado';
   message.textContent = '';
   logout.hidden = true;
   loginLink.hidden = false;
@@ -68,13 +79,13 @@ async function verifySession(supabase) {
     const verified = await supabase.auth.getUser();
     if (verified.error) throw verified.error;
     if (current !== revision) return;
-    account.textContent = `Sesión: ${verified.data.user.email}`;
+    accountName.textContent = verified.data.user.user_metadata?.full_name?.trim() || 'Mi cuenta';
     logout.hidden = false;
     loginLink.hidden = true;
-    message.textContent = 'Los datos de la mascota y las lecturas siguen siendo de demostración.';
+    message.textContent = '';
   } catch {
     if (current !== revision) return;
-    account.textContent = 'No se pudo verificar la sesión';
+    accountName.textContent = 'Mi cuenta';
     logout.hidden = false;
     loginLink.hidden = false;
     message.textContent = 'Revisa tu conexión o vuelve a iniciar sesión.';

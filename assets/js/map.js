@@ -7,6 +7,20 @@ let marker;
 let currentLocation = null;
 let tilesFailed = false;
 let currentPet = null;
+let currentPhoto = null;
+
+// Marcador / Fotografia de la mascota seleccionada.
+function photoIcon() {
+  const image = document.createElement('img');
+  image.src = currentPhoto || new URL('../favicon.svg', import.meta.url).href;
+  image.alt = currentPet?.name || 'Mascota';
+  return L.divIcon({ className: 'collar-marker', html: image, iconSize: [48, 48], iconAnchor: [24, 24] });
+}
+
+export function setMapPhoto(photo) {
+  currentPhoto = photo;
+  if (marker) marker.setIcon(photoIcon());
+}
 const notice = document.querySelector('#map-notice');
 const centerButton = document.querySelector('#center-map');
 
@@ -42,13 +56,11 @@ export function showLocation(location) {
     if (location) {
       const position = [location.latitude, location.longitude];
       // El nombre editado se inserta como texto, nunca como HTML.
-      const initial = document.createElement('span');
-      initial.textContent = Array.from(currentPet?.name ?? 'M')[0];
       const popup = document.createElement('div');
-      popup.textContent = `${currentPet?.name ?? 'Mascota'} · Collar ${currentPet?.collar ?? ''} · Ubicación registrada manualmente`;
+      popup.textContent = `${currentPet?.name ?? 'Mascota'} · Collar ${(currentPet?.collar ?? '').replace(/^Demo /, '')} · Ubicación registrada manualmente`;
 
       marker = L.marker(position, {
-        icon: L.divIcon({ className: 'collar-marker', html: initial, iconSize: [40, 40], iconAnchor: [20, 20] }),
+        icon: photoIcon(),
         title: `${currentPet?.name ?? 'Mascota'} · ubicación manual`,
         alt: 'Ubicación registrada de la mascota',
       }).addTo(map).bindPopup(popup);

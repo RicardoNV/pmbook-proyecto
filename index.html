@@ -51,15 +51,20 @@
 
     <!-- Vista previa / Acceso y registro -->
     <a id="account-login" href="./login.html" class="sidebar-link mt-6">Inicio de sesión ↗</a>
-    <button id="logout-button" class="sidebar-link mt-6" type="button" hidden>Cerrar sesión</button>
+
 
     <!-- Mascota seleccionada -->
-    <div class="sidebar-pet">
+    <div class="pet-switcher">
+      <!-- Selector / Lista desplegable hacia arriba -->
+      <div id="pet-switcher-list" class="pet-switcher-list" aria-label="Seleccionar mascota" hidden></div>
+      <button id="pet-switcher-toggle" class="sidebar-pet" type="button" aria-expanded="false" aria-controls="pet-switcher-list" disabled>
       <img src="./assets/images/mascota-demo.jpg" width="44" height="44" alt="" data-pet-image>
-      <div>
+      <span class="pet-switcher-label">
         <strong data-pet-name>Max</strong>
-        <span>Perfil de demostración</span>
-      </div>
+        <span>Cambiar mascota</span>
+      </span>
+      <span class="pet-switcher-arrow" aria-hidden="true">⌃</span>
+      </button>
     </div>
   </aside>
 
@@ -91,16 +96,15 @@
       </a>
 
       <!-- Demo Badge -->
-      <span class="demo-badge"><span aria-hidden="true">◉</span>Modo demostración</span>
+      <span id="account-name" class="demo-badge" aria-label="Usuario actual">Mi cuenta</span>
     </div>
 
   </header>
 
   <!-- Main -->
-  <main id="main" class="shell py-8 md:py-10">
+  <main id="main" class="shell py-4 md:py-5">
 
     <!-- Cuenta / Identidad separada de los datos de demostracion -->
-    <p id="account-status" class="muted mb-2" style="overflow-wrap: anywhere;" role="status">Comprobando sesión…</p>
     <p id="session-message" class="muted mb-6" role="status"></p>
 
     <!-- Apartado / Dashboard -->
@@ -212,7 +216,7 @@
         <!-- Header Frecuencia cardiaca -->
         <div class="card-heading">
           <div class="flex items-center gap-3">
-            <span class="heart-icon" aria-hidden="true">♡</span>
+            
             <h2 id="pulse-title">Frecuencia cardíaca</h2>
           </div>
         </div>
@@ -221,7 +225,7 @@
           <span id="pulse-status" class="status" data-state="empty">Sin datos</span>
 
           <div class="pulse-reading">
-            <strong id="heart-rate">—</strong>
+            <svg class="pulse-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-9-5.4-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.6-9 12-9 12Z"/></svg><strong id="heart-rate">—</strong>
             <span>lpm</span>
           </div>
           <p class="muted text-sm">Latidos por minuto</p>
@@ -268,8 +272,18 @@
         <p class="muted mt-2">Su información, siempre a la mano.</p>
       </div>
 
+      <!-- Seleccion / Todas las mascotas de la cuenta -->
+      <div class="card p-5 mb-6 flex flex-wrap items-end gap-4">
+        <div class="flex-1" style="min-width: 180px;">
+          <label for="pet-selector">Mis mascotas</label>
+          <select id="pet-selector" disabled><option>Cargando mascotas…</option></select>
+        </div>
+        <button id="add-pet" class="button button-primary" type="button" disabled>Agregar mascota</button>
+        <button id="retry-pets" class="button button-secondary" type="button" hidden>Reintentar carga</button>
+      </div>
+
       <!-- Ficha de informacion -->
-      <article id="pet-profile" class="card pet-profile" aria-label="Ficha de la mascota">
+      <article id="pet-profile" hidden class="card pet-profile" aria-label="Ficha de la mascota">
         <div class="pet-profile-cover"></div>
 
         <div class="pet-profile-heading">
@@ -277,7 +291,7 @@
             <img src="./assets/images/mascota-demo.jpg" width="136" height="136" alt="Fotografía de un beagle de prueba" data-pet-image>
           </div>
           <div class="pet-profile-name">
-            <span class="sample-label">Perfil de ejemplo</span>
+            <span id="pet-profile-label" class="sample-label">Mi mascota</span>
             <h2 data-pet-name>Max</h2>
             <p id="pet-breed-summary" class="muted">Beagle · Macho</p>
           </div>
@@ -313,7 +327,7 @@
           </div>
           <div>
             <dt>Tamaño</dt>
-            <dd>Mediano</dd>
+            <dd data-profile="size">Mediano</dd>
           </div>
           <div>
             <dt>Color del pelaje</dt>
@@ -324,15 +338,15 @@
             <dd data-profile="owner">Ana López</dd>
           </div>
           <div>
-            <dt>Identificador del collar</dt>
+            <dt>Modelo del collar</dt>
             <dd data-profile="collar">SC-001</dd>
           </div>
         </dl>
 
         <!-- Pie de la ficha -->
         <div class="pet-profile-footer">
-          <p>Los cambios y la eliminación solo aplican durante esta sesión.</p>
-          <a href="https://www.pexels.com/photo/close-up-photo-of-beagle-8336043/" target="_blank" rel="noopener noreferrer">Foto: Lera Mk / Pexels</a>
+          <p>Los datos de tu mascota se guardan en tu cuenta.</p>
+          <span>Fotografía proporcionada por el responsable.</span>
         </div>
       </article>
 
@@ -340,8 +354,8 @@
       <div id="pet-empty" class="card pet-empty" hidden>
         <img src="./assets/favicon.svg" width="64" height="64" alt="">
         <h2>No hay una mascota registrada</h2>
-        <p class="muted">El perfil se eliminó de esta sesión. Puedes recuperar los datos de prueba.</p>
-        <button id="restore-pet" class="button button-primary" type="button">Restaurar mascota de ejemplo</button>
+        <p class="muted">Agrega tu primera mascota para completar su ficha.</p>
+        <button id="restore-pet" class="button button-primary" type="button">Crear mi primera mascota</button>
       </div>
 
       <p id="pet-feedback" class="feedback" role="status" aria-live="polite"></p>
@@ -486,14 +500,25 @@
             <input id="pet-input-owner" name="owner" type="text" required maxlength="80">
           </div>
           <div>
-            <label for="pet-input-collar">Identificador del collar</label>
-            <input id="pet-input-collar" name="collar" type="text" required maxlength="30">
+            <label for="pet-input-collar">Modelo del collar</label>
+            <select id="pet-input-collar" name="collar"><option>Sin asignar</option><option value="Demo Mini">Mini</option><option value="Demo Classic">Classic</option><option value="Demo Plus">Plus</option></select>
           </div>
         </div>
       </fieldset>
 
+      <!-- Foto y tamaño / Datos propios de la mascota -->
+      <fieldset>
+        <legend>Foto y tamaño</legend>
+        <label for="pet-input-size">Tamaño</label>
+        <select id="pet-input-size" name="size" required><option>Pequeño</option><option selected>Mediano</option><option>Grande</option></select>
+        <label for="pet-input-photo">Fotografía (JPEG, PNG o WebP; hasta 10 MB)</label>
+        <input id="pet-input-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp">
+        <img id="pet-photo-preview" width="120" height="120" alt="Vista previa de la mascota" hidden style="object-fit: cover; border-radius: 16px; margin-top: 12px;">
+        <button id="remove-pet-photo" type="button" class="text-button">Quitar fotografía</button>
+      </fieldset>
+      <p id="pet-form-message" role="status" class="feedback"></p>
       <!-- Acciones del formulario -->
-      <p class="field-help mb-5">Datos de Testeo. La fotografía y el tamaño mediano permanecen fijos en esta etapa.</p>
+      <p class="field-help mb-5">La fotografía es opcional. Puedes seleccionar el modelo del collar.</p>
       <div class="pet-dialog-actions">
         <button id="cancel-pet-form" class="button button-secondary" type="button">Cancelar</button>
         <button class="button button-primary" type="submit">Guardar cambios</button>
@@ -504,10 +529,23 @@
   <!-- Dialog / Eliminacion provisional -->
   <dialog id="delete-pet-dialog" aria-labelledby="delete-pet-title" aria-describedby="delete-pet-description">
     <h2 id="delete-pet-title" class="dialog-title">Eliminar mascota</h2>
-    <p id="delete-pet-description" class="muted mt-3 mb-6">Se quitarán el perfil y sus lecturas de esta sesión. Puedes restaurar el ejemplo después.</p>
+    <p id="delete-pet-description" class="muted mt-3 mb-6">Se eliminarán permanentemente todos los datos y registros guardados de esta mascota, incluida su fotografía. Esta acción no se puede deshacer. No se modificará ningún collar.</p>
     <div class="pet-dialog-actions">
       <button id="cancel-delete-pet" class="button button-secondary" type="button" autofocus>Cancelar</button>
-      <button id="confirm-delete-pet" class="button button-danger" type="button">Eliminar de la sesión</button>
+      <button id="confirm-delete-pet" class="button button-danger" type="button">Eliminar permanentemente</button>
+    </div>
+  </dialog>
+  <!-- Sesion / Accion flotante y confirmacion -->
+  <button id="logout-button" class="logout-floating" type="button" aria-label="Cerrar sesión" title="Cerrar sesión" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 4H4v16h6M14 8l4 4-4 4M8 12h12"/></svg>
+  </button>
+  <dialog id="logout-dialog" aria-labelledby="logout-title">
+    <h2 id="logout-title" class="dialog-title">¿Cerrar sesión?</h2>
+    <p class="muted mt-3 mb-6">Tus mascotas seguirán guardadas. Podrás volver a entrar con tu correo y contraseña.</p>
+    <p id="logout-error" role="status"></p>
+    <div class="pet-dialog-actions">
+      <button id="cancel-logout" class="button button-secondary" type="button" autofocus>Cancelar</button>
+      <button id="confirm-logout" class="button button-danger" type="button">Cerrar sesión</button>
     </div>
   </dialog>
 </body>
