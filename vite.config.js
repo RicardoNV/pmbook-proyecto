@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 
@@ -6,7 +6,17 @@ import { fileURLToPath } from 'node:url';
 // Vite / Desarrollo y compilacion del frontend
 // ==================================================
 
-export default defineConfig({
+export default defineConfig(({ mode, command }) => {
+  // Publicacion / Evita generar un sitio que no pueda conectar con Supabase.
+  const env = loadEnv(mode, process.cwd(), 'VITE_SUPABASE_');
+  if (command === 'build') {
+    let validUrl = false;
+    try { validUrl = new URL(env.VITE_SUPABASE_URL).protocol === 'https:'; } catch { /* Configuracion incompleta. */ }
+    if (!validUrl || !env.VITE_SUPABASE_PUBLISHABLE_KEY?.startsWith('sb_publishable_')) {
+      throw new Error('No se puede compilar: configura VITE_SUPABASE_URL (HTTPS) y VITE_SUPABASE_PUBLISHABLE_KEY en .env.local o en el entorno de compilacion. Para Netlify manual, compila localmente y sube la carpeta dist completa.');
+    }
+  }
+  return {
   plugins: [tailwindcss()],
 
   // Las rutas relativas permiten servir dist desde una subcarpeta.
@@ -35,4 +45,5 @@ export default defineConfig({
     port: 4174,
     strictPort: true,
   },
+  };
 });

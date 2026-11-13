@@ -119,7 +119,7 @@ for (const form of forms) {
     }
 
     const messages = {
-      'recovery-form': 'Correo validado. No se envió ningún mensaje: la recuperación estará disponible al conectar el servicio de autenticación.',
+      'recovery-form': 'No se pudo enviar el enlace de recuperación. Contacta al administrador.',
     };
     result.textContent = messages[form.id];
   });
@@ -157,6 +157,7 @@ async function loginAccount(form) {
     }
   } catch (error) {
     const messages = {
+      supabase_not_configured: 'El sitio no tiene configurada la conexión de acceso. Contacta al administrador para actualizar la publicación.',
       invalid_credentials: 'El correo o la contraseña no son correctos.',
       email_not_confirmed: 'Confirma tu correo antes de iniciar sesión. Revisa también la carpeta de spam.',
       over_request_rate_limit: 'Demasiados intentos. Espera unos minutos antes de volver a intentar.',
@@ -181,9 +182,10 @@ async function loginAccount(form) {
 
 function registrationError(error) {
   const messages = {
+    supabase_not_configured: 'El sitio no tiene configurada la conexión de acceso. Contacta al administrador para actualizar la publicación.',
     weak_password: 'La contraseña no cumple los requisitos del servicio. Usa una más larga con mayúsculas, minúsculas, números y símbolos.',
     email_address_invalid: 'Revisa que el correo electrónico sea válido.',
-    email_address_not_authorized: 'El servicio de correo de pruebas no permite enviar a esta dirección. Falta configurar el envío de correos del proyecto.',
+    email_address_not_authorized: 'No se pudo enviar el correo a esta dirección. Contacta al administrador.',
     over_email_send_rate_limit: 'Se alcanzó el límite de correos. Espera unos minutos antes de volver a intentar.',
     over_request_rate_limit: 'Hay demasiados intentos. Espera unos minutos y vuelve a intentar.',
     signup_disabled: 'El registro está deshabilitado temporalmente.',

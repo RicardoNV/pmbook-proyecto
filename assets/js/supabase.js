@@ -9,7 +9,7 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // Configuracion / Vite carga estos valores desde .env.local.
 if (!supabaseUrl || !supabaseKey?.startsWith('sb_publishable_')) {
-  throw new Error('Configura la URL y la clave publicable de Supabase en .env.local.');
+  throw Object.assign(new Error('Configura la URL y la clave publicable de Supabase en .env.local.'), { code: 'supabase_not_configured' });
 }
 
 // Una instancia / Los formularios compartiran la misma sesion.

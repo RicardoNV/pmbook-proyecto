@@ -11,6 +11,7 @@ const confirmLogout = document.querySelector('#confirm-logout');
 const cancelLogout = document.querySelector('#cancel-logout');
 const logoutError = document.querySelector('#logout-error');
 let revision = 0;
+let initializing = true;
 
 logout.addEventListener('click', () => { logoutError.textContent = ''; logoutDialog.showModal(); });
 cancelLogout.addEventListener('click', () => logoutDialog.close());
@@ -26,7 +27,7 @@ async function initializeSession() {
       if (event === 'SIGNED_OUT') {
         revision += 1;
         showGuest();
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+      } else if (!initializing && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
         setTimeout(() => verifySession(supabase), 0);
       }
     });
@@ -50,11 +51,11 @@ async function initializeSession() {
       }
     });
 
-    await verifySession(supabase);
+    return await verifySession(supabase);
   } catch {
     showGuest();
-    message.textContent = 'No se pudo comprobar la sesión. Recarga para volver a intentar.';
-  }
+    return false;
+  } finally { initializing = false; }
 }
 
 function showGuest() {
@@ -62,6 +63,7 @@ function showGuest() {
   message.textContent = '';
   logout.hidden = true;
   loginLink.hidden = false;
+  window.location.replace('./login.html#login');
 }
 
 async function verifySession(supabase) {
@@ -72,7 +74,7 @@ async function verifySession(supabase) {
     if (current !== revision) return;
     if (!data.session) {
       showGuest();
-      return;
+      return false;
     }
 
     // Verificamos la identidad con el servidor, no solo con el almacenamiento local.
@@ -83,13 +85,12 @@ async function verifySession(supabase) {
     logout.hidden = false;
     loginLink.hidden = true;
     message.textContent = '';
+    return true;
   } catch {
     if (current !== revision) return;
-    accountName.textContent = 'Mi cuenta';
-    logout.hidden = false;
-    loginLink.hidden = false;
-    message.textContent = 'Revisa tu conexión o vuelve a iniciar sesión.';
+    showGuest();
+    return false;
   }
 }
 
-initializeSession();
+export const sessionReady = initializeSession();

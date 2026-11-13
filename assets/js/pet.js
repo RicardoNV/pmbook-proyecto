@@ -2,9 +2,10 @@
 // Mascotas / Fichas privadas por usuario en Supabase
 // ==================================================
 import { setMapPhoto } from './map.js';
+import { removePoints } from './tracking-store.js';
 
 const fields = ['name', 'breed', 'age', 'sex', 'weight', 'size', 'color', 'owner', 'collar'];
-const columns = `id,${fields.join(',')},created_at`;
+const columns = `id,user_id,${fields.join(',')},created_at`;
 const fallback = new URL('../favicon.svg', import.meta.url).href;
 
 export async function initializePet(onChange) {
@@ -26,6 +27,51 @@ export async function initializePet(onChange) {
   const switcher = $('#pet-switcher-list');
   const switcherToggle = $('#pet-switcher-toggle');
   const photos = new Map();
+  const cardPhotos = new IntersectionObserver(async entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      cardPhotos.unobserve(entry.target);
+      const id = entry.target.dataset.petId;
+      if (!photos.has(id)) {
+        const { data, error } = await client.from('pets').select('photo_data').eq('id', id).single();
+        if (error) continue;
+        photos.set(id, data.photo_data);
+      }
+      entry.target.querySelector('img').src = photos.get(id) || fallback;
+    }
+  });
+
+  // Tarjetas / Una opcion por mascota, con foto y estado seleccionado.
+  function renderCards() {
+    const focusedId = selector.contains(document.activeElement) ? document.activeElement.dataset.petId : null;
+    cardPhotos.disconnect();
+    selector.replaceChildren();
+    for (const pet of pets) {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'pet-choice-card';
+      card.dataset.petId = pet.id;
+      card.setAttribute('aria-pressed', String(pet.id === selected?.id));
+      const image = document.createElement('img');
+      image.alt = '';
+      image.width = 52;
+      image.height = 52;
+      image.src = photos.get(pet.id) || fallback;
+      const name = document.createElement('span');
+      name.textContent = pet.name;
+      card.append(image, name);
+      card.addEventListener('click', () => { feedback.textContent = ''; selectPet(pet.id); });
+      selector.append(card);
+      cardPhotos.observe(card);
+      if (focusedId === pet.id) card.focus({ preventScroll: true });
+    }
+    if (!pets.length) {
+      const empty = document.createElement('p');
+      empty.className = 'muted';
+      empty.textContent = ready ? 'Agrega a tu primera mascota.' : 'Cargando mascotas…';
+      selector.append(empty);
+    }
+  }
 
   // Selector inferior / Fotos bajo demanda y cache durante esta pagina.
   function closeSwitcher(focus = false) {
@@ -93,7 +139,7 @@ export async function initializePet(onChange) {
   function controls() {
     for (const id of ['#add-pet', '#restore-pet']) $(id).disabled = busy || !ready || !user;
     for (const id of ['#edit-pet', '#delete-pet']) $(id).disabled = busy || !selected || !user;
-    selector.disabled = busy || !pets.length;
+    for (const card of selector.querySelectorAll('button')) card.disabled = busy || !user;
     switcherToggle.disabled = busy || !pets.length || !user;
     for (const element of form.elements) element.disabled = busy;
     form.querySelector('[type="submit"]').disabled = busy || photoPending;
@@ -104,6 +150,11 @@ export async function initializePet(onChange) {
   function setPhoto(photo) {
     currentPhoto = photo;
     setMapPhoto(photo);
+    if (selected) {
+      for (const card of selector.querySelectorAll('button')) {
+        if (card.dataset.petId === selected.id) card.querySelector('img').src = photo || fallback;
+      }
+    }
     for (const image of document.querySelectorAll('[data-pet-image]')) {
       image.src = photo || fallback;
       image.alt = selected ? `Fotografía de ${selected.name}` : '';
@@ -114,10 +165,7 @@ export async function initializePet(onChange) {
   function render() {
     $('#pet-profile').hidden = !selected;
     $('#pet-empty').hidden = !ready || Boolean(selected);
-    selector.replaceChildren();
-    for (const pet of pets) selector.add(new Option(pet.name, pet.id));
-    if (!pets.length) selector.add(new Option('Sin mascotas', ''));
-    selector.value = selected?.id || '';
+    renderCards();
     for (const node of document.querySelectorAll('[data-pet-name]')) node.textContent = selected?.name || 'Sin mascota';
     $('#dashboard-pet-summary').textContent = selected
       ? `Perro ${selected.size.toLowerCase()} · ${selected.collar.replace(/^Demo /, '')}`
@@ -210,7 +258,6 @@ export async function initializePet(onChange) {
   $('#restore-pet').addEventListener('click', () => openForm(false));
   $('#edit-pet').addEventListener('click', () => openForm(true));
   $('#retry-pets').addEventListener('click', () => { if (!busy) loadPets(); });
-  selector.addEventListener('change', () => { feedback.textContent = ''; selectPet(selector.value); });
   for (const id of ['#close-pet-form', '#cancel-pet-form']) $(id).addEventListener('click', () => { if (!busy) dialog.close(); });
   dialog.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
   dialog.addEventListener('close', () => {
@@ -307,6 +354,7 @@ export async function initializePet(onChange) {
       const { error } = await client.from('pets').delete().eq('id', id);
       if (error) throw error;
       pets = pets.filter(pet => pet.id !== id);
+      try { removePoints({ id, user_id: user.id }); } catch { /* El navegador puede bloquear el almacenamiento local. */ }
       await selectPet(pets[0]?.id);
       deletion.close();
       feedback.textContent = 'Mascota y fotografía eliminadas permanentemente.';

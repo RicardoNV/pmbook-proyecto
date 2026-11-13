@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="session-pending">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#123a46">
-  <meta name="description" content="Panel de monitoreo de Smart Collar: ubicación y frecuencia cardíaca de tu mascota. Prototipo con datos manuales.">
+  <meta name="theme-color" content="#98d7eb">
+  <meta name="description" content="Panel de monitoreo de Smart Collar: ubicación y frecuencia cardíaca de tu mascota.">
 
   <title>Smart Collar · Panel de monitoreo</title>
 
   <!-- LINKS -->
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./src/styles.css">
-  <script type="module" src="./assets/js/app.js"></script>
-  <script type="module" src="./assets/js/session.js"></script>
+  <link rel="stylesheet" href="./src/pastel.css">
+  <script type="module" src="./assets/js/dashboard.js"></script>
 
 </head>
 <body>
@@ -91,7 +91,7 @@
 
       <!--Logo  -->
       <a class="brand" href="./" aria-label="Smart Collar, inicio">
-        <img src="./assets/favicon.svg" width="42" height="42" alt="">
+        <img class="brand-logo" src="./assets/favicon.svg" width="42" height="42" alt="">
         <span>smart<span class="font-normal">collar</span><small>CONEXIÓN QUE CUIDA</small></span>
       </a>
 
@@ -111,11 +111,17 @@
     <section id="dashboard" aria-labelledby="dashboard-title">
 
     <!-- Presentacion monitoreo -->
-    <div class="flex flex-wrap items-end justify-between gap-5 mb-7">
+    <div class="dashboard-intro flex flex-wrap items-end justify-between gap-5 mb-7">
       <div>
         <p class="eyebrow mb-2">MI MASCOTA / MONITOREO</p>
         <h1 id="dashboard-title" tabindex="-1">Un vistazo a su día.</h1>
         <p class="muted mt-2">Su ubicación y su pulso, en un mismo lugar.</p>
+      </div>
+
+      <!-- Bienvenida / Fotografias decorativas del mundo de las mascotas -->
+      <div class="intro-pets" aria-hidden="true">
+        <img src="./assets/favicon.svg" width="108" height="108" alt="" data-pet-image>
+
       </div>
 
       <!-- Capturar lectura -->
@@ -127,14 +133,14 @@
     <!-- Datos de la Mascota -->
 
 
-    <section class="pet-strip mb-6" aria-label="Mascota del prototipo">
+    <section class="pet-strip mb-6" aria-label="Mascota seleccionada">
       <div class="flex items-center gap-4">
         <div class="pet-avatar" aria-hidden="true">
           <img src="./assets/images/mascota-demo.jpg" width="52" height="52" alt="" data-pet-image>
         </div>
         <div>
           <h2 class="pet-name"><span data-pet-name>Max</span>
-            <span class="sample-label">Ejemplo</span>
+
           </h2>
           <p id="dashboard-pet-summary" class="muted text-sm">Perro mediano · Collar SC-001</p>
         </div>
@@ -150,7 +156,7 @@
       </div>
 
 
-      <span class="session-note">Los cambios duran esta sesión.</span>
+      <span class="session-note">Lecturas de esta sesión.</span>
 
     </section>
 
@@ -183,9 +189,31 @@
           </div>
 
           <!-- Boton centrar -->
+          <button id="open-tracking" class="tracking-launch" type="button" disabled><span aria-hidden="true">⌁</span> Rastreo</button>
           <button id="center-map" class="map-center" type="button" disabled aria-label="Centrar mapa en la ubicación registrada">⌖ 
             <span>Centrar</span>
           </button>
+        </div>
+
+        <!-- Rastreo / Resumen del intervalo seleccionado -->
+        <div class="location-history-toolbar">
+          <button id="open-location-history" class="button button-secondary" type="button" disabled>⌖ Últimas ubicaciones</button>
+        </div>
+        <div id="location-preview" class="tracking-summary" hidden>
+          <p id="location-preview-label" role="status"></p>
+          <div class="flex gap-3 flex-wrap">
+            <button id="back-location-history" class="button button-secondary" type="button">Volver a la lista</button>
+            <button id="exit-location-preview" class="button button-primary" type="button">Salir de esta vista</button>
+          </div>
+        </div>
+        <div id="tracking-summary" class="tracking-summary" hidden>
+          <p id="tracking-result" role="status"></p>
+          <div class="flex gap-3 flex-wrap">
+            <button id="change-tracking" class="button button-secondary" type="button">Cambiar rango</button>
+            <button id="exit-tracking" class="button button-primary" type="button">Salir del rastreo</button>
+            <!-- Control temporal de limpieza / Solo visible durante el rastreo -->
+            <button id="reset-tracking" class="button button-secondary" type="button" title="Elimina todos los puntos de esta mascota excepto el más antiguo y cierra el rastreo">Conservar punto inicial y salir</button>
+          </div>
         </div>
 
         <!-- GRID DE COORDENADAS -->
@@ -194,7 +222,7 @@
 
             <!-- LATITUD -->
             <span class="meta-label">LATITUD</span><strong id="latitude">—</strong></div>
-            
+
             <!-- LONGITUD -->
             <div>  
               <span class="meta-label">LONGITUD</span><strong id="longitude">—</strong>
@@ -216,7 +244,7 @@
         <!-- Header Frecuencia cardiaca -->
         <div class="card-heading">
           <div class="flex items-center gap-3">
-            
+
             <h2 id="pulse-title">Frecuencia cardíaca</h2>
           </div>
         </div>
@@ -251,10 +279,10 @@
     <section class="info-strip mt-6" aria-label="Acerca de los datos">
       <span class="info-symbol" aria-hidden="true">i</span>
       <div>
-        <h2>Estás explorando el prototipo</h2>
-        <p>Los valores son manuales y no representan una conexión en tiempo real. Al cumplir 5 minutos, una lectura se marca como desactualizada.</p>
+        <h2>Tus lecturas, al día</h2>
+        <p>Consulta la fecha de cada lectura. Después de cinco minutos se indica que necesita actualizarse.</p>
       </div>
-      <button id="reset-data" class="text-button" type="button">Restablecer ejemplo 
+      <button id="reset-data" class="text-button" type="button">Restablecer lecturas
         <span aria-hidden="true">↺</span>
       </button>
     </section>
@@ -275,8 +303,8 @@
       <!-- Seleccion / Todas las mascotas de la cuenta -->
       <div class="card p-5 mb-6 flex flex-wrap items-end gap-4">
         <div class="flex-1" style="min-width: 180px;">
-          <label for="pet-selector">Mis mascotas</label>
-          <select id="pet-selector" disabled><option>Cargando mascotas…</option></select>
+          <h2 id="pet-selector-title" class="mb-3">Mis mascotas</h2>
+          <div id="pet-selector" class="pet-card-list" role="group" aria-labelledby="pet-selector-title"><p class="muted">Cargando mascotas…</p></div>
         </div>
         <button id="add-pet" class="button button-primary" type="button" disabled>Agregar mascota</button>
         <button id="retry-pets" class="button button-secondary" type="button" hidden>Reintentar carga</button>
@@ -288,7 +316,7 @@
 
         <div class="pet-profile-heading">
           <div class="pet-portrait">
-            <img src="./assets/images/mascota-demo.jpg" width="136" height="136" alt="Fotografía de un beagle de prueba" data-pet-image>
+            <img src="./assets/images/mascota-demo.jpg" width="136" height="136" alt="Fotografía de la mascota" data-pet-image>
           </div>
           <div class="pet-profile-name">
             <span id="pet-profile-label" class="sample-label">Mi mascota</span>
@@ -364,10 +392,10 @@
     <!-- Pie de Pagina -->
     <footer class="footer">
       <span>SMART COLLAR 
-        <span class="footer-dot">/</span> PROTOTIPO 01</span><p>Monitoreo para perros medianos. No sustituye la valoración veterinaria.</p>
+        <span class="footer-dot">/</span> CUIDADO Y CONEXIÓN</span><p>Monitoreo para perros medianos. No sustituye la valoración veterinaria.</p>
       </footer>
     <noscript>
-      <p class="error-banner">Activa JavaScript para capturar y visualizar lecturas. Este prototipo no recibe datos reales del collar.</p>
+      <p class="error-banner">Activa JavaScript para capturar y visualizar lecturas.</p>
     </noscript>
   </main>
   </div>
@@ -379,12 +407,12 @@
 
       <!-- Header FORMS -->
       <div class="flex items-center justify-between gap-4">
-        <p class="eyebrow">DATOS DEL PROTOTIPO</p>
+        <p class="eyebrow">REGISTRAR LECTURA</p>
         <button id="close-form" type="button" class="close-button" aria-label="Cerrar captura">×</button>
       </div>
       
       <h2 id="form-title" class="dialog-title">Capturar lectura</h2>
-      <p id="form-description" class="muted mt-2 mb-6">Actualiza la ubicación, el pulso o ambos. Los campos vacíos permiten probar el estado sin datos.</p>
+      <p id="form-description" class="muted mt-2 mb-6">Registra una ubicación, el pulso o ambos. Cada ubicación se añade al historial de la mascota con la fecha y hora indicada.</p>
 
       <!-- Inicio del forms  -->
 
@@ -399,7 +427,7 @@
           <button id="use-my-location" class="button button-secondary" type="button" aria-describedby="geolocation-help">
             Usar mi ubicación
           </button>
-          <p id="geolocation-help" class="field-help">Usa la ubicación de este equipo como dato de prueba, no la del collar. Requiere permiso del navegador.</p>
+          <p id="geolocation-help" class="field-help">Utiliza la ubicación de este equipo. Requiere permiso del navegador.</p>
           <p id="geolocation-status" class="field-help" role="status" aria-live="polite"></p>
         </div>
 
@@ -436,6 +464,7 @@
 
       <!-- Pie de pagina  -->
       <p class="field-help mb-5">Las horas corresponden a la zona horaria de tu dispositivo.</p>
+      <p id="reading-save-error" class="field-error" role="alert"></p>
       <div class="dialog-actions">
         <button id="clear-fields" type="button" class="text-button">Vaciar campos</button>
         <div class="flex gap-3">
@@ -446,6 +475,39 @@
   </dialog>
 
   <!-- Dialog / Editar datos de la mascota -->
+  <!-- Rastreo / Seleccion de fechas antes de dibujar el recorrido -->
+  <dialog id="tracking-dialog" aria-labelledby="tracking-title">
+    <form id="tracking-form">
+      <div class="flex items-center justify-between gap-4">
+        <p class="eyebrow">HUELLAS EN EL MAPA</p>
+        <button id="close-tracking" class="close-button" type="button" aria-label="Cerrar rastreo">×</button>
+      </div>
+      <h2 id="tracking-title" class="dialog-title">Explora su recorrido</h2>
+      <p class="muted mt-2 mb-6">Elige desde cuándo y hasta cuándo quieres ver sus ubicaciones registradas.</p>
+      <label for="tracking-from">Desde</label>
+      <input id="tracking-from" type="datetime-local" required>
+      <label for="tracking-to">Hasta</label>
+      <input id="tracking-to" type="datetime-local" required>
+      <p class="field-help">Horario de este dispositivo. El historial se guarda en este navegador; no se sincroniza con otros equipos.</p>
+      <p id="tracking-error" class="field-error" role="alert"></p>
+      <div class="dialog-actions mt-6">
+        <button id="tracking-add-point" type="button" class="button button-secondary">Agregar punto</button>
+        <button class="button button-primary" type="submit">Ver recorrido</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Historial / Ultimos cambios significativos de ubicacion -->
+  <dialog id="location-history-dialog" aria-labelledby="location-history-title">
+    <div class="flex items-center justify-between gap-4">
+      <p class="eyebrow">SUS ULTIMAS HUELLAS</p>
+      <button id="close-location-history" class="close-button" type="button" aria-label="Cerrar ubicaciones">×</button>
+    </div>
+    <h2 id="location-history-title" class="dialog-title">Últimas ubicaciones</h2>
+    <p class="muted mt-2 mb-6">Hasta 10 cambios de al menos 20 metros respecto al último punto aceptado, del más reciente al más antiguo. Selecciona uno para verlo en el mapa.</p>
+    <div id="location-history-list" class="location-history-list"></div>
+  </dialog>
+
   <dialog id="pet-dialog" aria-labelledby="pet-form-title" aria-describedby="pet-form-description">
     <form id="pet-form">
 

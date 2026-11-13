@@ -1,3 +1,5 @@
+/* Capa de componentes / El tema compartido define la apariencia final. */
+@layer components {
 /* ==================================================
    Acceso / Marca y distribucion de la pagina
    ================================================== */
@@ -145,4 +147,5 @@
   .auth-story { grid-template-columns: 1fr 80px; padding: 20px; gap: 12px; }
   .auth-pet-photo { height: 80px; }
   .auth-story h1 { font-size: 1.3rem; }
+}
 }

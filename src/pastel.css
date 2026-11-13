@@ -1,0 +1,300 @@
+/* ==================================================
+   Smart Collar / Identidad pastel inspirada en la referencia
+   Capa visual compartida; conserva rutas, estados e interacciones.
+   ================================================== */
+
+:root {
+  --sky: #98d7eb;
+  --sky-light: #e6f6fc;
+  --lavender: #edd9fa;
+  --ink: #20242a;
+  --muted: #56616b;
+  --outline: #e0e9ed;
+}
+
+body { background: #f3f7f9; color: var(--ink); }
+h1, h2, .brand, .dialog-title { color: var(--ink); }
+h1 { font-weight: 650; letter-spacing: -.055em; }
+.muted, .eyebrow, .meta-label, .field-help, .auth-description { color: var(--muted); }
+:focus-visible { outline: 3px solid #27677f; outline-offset: 4px; }
+.brand { letter-spacing: -.055em; }
+.brand small { color: #56616b; font-size: .58rem; letter-spacing: .12em; }
+.brand > img { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 3px solid white; box-shadow: 0 0 0 1px #c4e3ef; }
+.button { border-radius: 999px; min-height: 46px; padding-inline: 22px; transition: background-color .18s, box-shadow .18s; }
+.button-primary { background: #222426; color: white; box-shadow: none; }
+.button-primary:hover { background: #41464b; box-shadow: 0 4px 12px #20242a18; }
+.button-secondary { background: white; color: var(--ink); border: 1.5px solid #d8e2e7; }
+.button-secondary:hover { background: var(--sky-light); }
+.button-danger { border-color: #efc1ca; color: #9e2340; background: #fff0f3; }
+.text-button { color: #285d74; }
+.card { border: 2px solid white; border-radius: 28px; box-shadow: 0 5px 22px #2c556909; }
+.card-heading h2 { font-size: 1.05rem; }
+.status { font-weight: 600; }
+.status[data-state="available"] { background: #e0f4ed; color: #225e4e; }
+.status[data-state="stale"] { background: #fff0d6; color: #77500e; }
+
+/* Encabezado y bienvenida / Azul cielo, fotos y contornos suaves */
+.header { background: #ffffffed; border-bottom: 1px solid #e8eef1; }
+.header .shell { padding-block: 18px; }
+.menu-toggle { border-radius: 50%; border: 0; background: #edf5f8; color: var(--ink); }
+#account-name { background: var(--sky-light); color: #294d5c; border: 1px solid #c6e8f4; border-radius: 999px; padding: 10px 16px; }
+.dashboard-intro {
+  position: relative; isolation: isolate; overflow: hidden; min-height: 220px;
+  padding: 32px; border: 3px solid white; border-radius: 32px;
+  background: var(--sky) url('../assets/images/pet-doodles.svg') right center / auto 100% no-repeat;
+  align-items: center; box-shadow: 0 5px 24px #6084940c;
+}
+.dashboard-intro > div:first-child { position: relative; z-index: 1; max-width: 55%; }
+.dashboard-intro h1 { font-size: clamp(2rem, 3.2vw, 3rem); }
+.dashboard-intro .eyebrow { color: #2e5362; font-size: .65rem; }
+.dashboard-intro .muted { color: #304d5a; max-width: 360px; }
+.dashboard-intro #open-form { z-index: 2; align-self: flex-end; }
+.intro-pets { position: absolute; inset: 18px 38px auto auto; display: flex; align-items: center; pointer-events: none; }
+.intro-pets img { width: 108px; height: 108px; object-fit: cover; border: 5px solid white; border-radius: 46% 54% 44% 56%; transform: rotate(-9deg); }
+.intro-pets img + img { width: 80px; height: 80px; margin-left: -20px; margin-top: 40px; transform: rotate(12deg); background: var(--lavender); }
+.pet-strip { border-radius: 26px; border: 2px solid #fff; background: #fff; }
+.pet-avatar { border-radius: 50%; background: var(--sky-light); }
+.pet-avatar img { border-radius: 50%; }
+.sample-label { border-radius: 999px; background: #f6effa; border-color: #e9d9f4; color: #665174; }
+.pet-meta { border-color: #e8edf1; }
+.map-center { border-radius: 999px; padding: 10px 16px; }
+.coordinate-grid { background: #fcfdff; }
+.section-icon { color: #4c7c91; }
+.pulse-card { background: #f5eafd; border: 2px solid #ead4f8; }
+.pulse-note { border-radius: 18px; background: #ffffffb8; color: #62556d; }
+.pulse-divider { background: #e4d1f1; }
+.info-strip { background: #e5f4fa; border-color: #d1eaf4; border-radius: 24px; }
+.footer { border-color: #e0e9ee; }
+
+/* Navegacion / Panel pastel y seleccion oscura */
+.sidebar { background: var(--sky); color: var(--ink); border-right: 3px solid white; border-radius: 0 32px 32px 0; }
+.sidebar-heading { padding-top: 8px; background: url('../assets/images/pet-doodles.svg') center / cover; }
+.sidebar-heading .eyebrow { color: #365969; }
+.sidebar-heading h2 { font-size: 1.7rem; }
+.sidebar-close { color: var(--ink); border-radius: 50%; background: #ffffff80; }
+.sidebar-link { color: #293f4b; border-radius: 999px; }
+.sidebar-link:hover { color: var(--ink); background: #ffffff75; }
+.sidebar-link[aria-current="page"] { color: white; background: #242729; }
+.sidebar-pet { background: #ffffffab; border: 2px solid white; border-radius: 24px; }
+.sidebar-pet strong { color: var(--ink); }
+.sidebar-pet span { color: #445a64; }
+.sidebar-pet:hover, .sidebar-pet[aria-expanded="true"] { background: white; }
+.sidebar-pet img { border: 2px solid white; }
+.pet-switcher-list { background: white; border: 2px solid #d8eaf2; border-radius: 24px; box-shadow: 0 -8px 25px #304e6220; }
+.pet-switcher-option { color: var(--ink); border-radius: 18px; }
+.pet-switcher-option:hover { background: #eff8fc; }
+.pet-switcher-option[aria-pressed="true"] { background: var(--sky-light); }
+.sidebar-backdrop { background: #34485655; backdrop-filter: blur(3px); }
+
+/* Mascotas / Fichas, imagenes y datos */
+.pet-profile { max-width: none; }
+.pet-profile-cover { height: 80px; background: var(--sky) url('../assets/images/pet-doodles.svg') right center / auto 240% repeat-x; }
+.pet-portrait { border: 2px solid #fff; box-shadow: 0 5px 18px #414b6b12; }
+.pet-details { gap: 16px; padding-top: 24px; border-color: #edf0f3; }
+.pet-details > div { padding: 16px; border: 1px solid #f0e7f5; background: #faf5fd; border-radius: 18px; }
+.pet-details > div:nth-child(3n + 2) { background: #f0faff; border-color: #e3f2f9; }
+.pet-details dt { font-size: .78rem; color: #666471; }
+.pet-profile-footer { background: #f4f9fc; }
+.pet-empty { background: #fff url('../assets/images/pet-doodles.svg') center / contain; border: 2px solid #d8edf6; }
+.pet-empty > img { background: var(--sky-light); border-radius: 50%; padding: 10px; width: 88px; height: 88px; }
+
+/* Formularios y confirmaciones / Mismos controles, nueva apariencia */
+dialog { border: 3px solid white; border-radius: 30px; background: #fbfdff; color: var(--ink); padding: 30px; box-shadow: 0 24px 80px #223c5540; }
+dialog::backdrop { background: #34485677; backdrop-filter: blur(4px); }
+dialog .eyebrow { color: #476676; }
+.close-button { background: var(--sky-light); color: #2f4c5a; }
+fieldset { border-color: #e0eaf1; }
+label { color: #34454f; }
+input, select, #pet-form select {
+  width: 100%; min-width: 0; min-height: 46px; font: inherit;
+  background: white; color: var(--ink); border: 1.5px solid #d8e4ec; border-radius: 15px; padding: 11px 14px;
+}
+input:focus, select:focus { border-color: #4c9ab7; }
+input[type="file"] { font-size: .8rem; padding: 10px; }
+input::file-selector-button { background: var(--sky-light); color: #294d5c; border: 0; border-radius: 999px; padding: 8px 12px; margin-right: 8px; }
+.logout-floating { border: 4px solid white; box-shadow: 0 5px 18px #b4404026; }
+
+/* Acceso / Composicion editorial, fotos y borde ondulado */
+.auth-page { background: #eaf3f7; }
+.auth-header, .auth-footer, .auth-layout { width: min(1200px, calc(100% - 64px)); }
+.auth-layout { gap: 28px; grid-template-columns: 1.05fr 1fr; align-items: stretch; }
+.auth-header { padding-block: 22px; }
+.auth-demo-link { border: 1px solid white; background: #ffffffba; border-radius: 999px; padding: 12px 18px; color: var(--ink); }
+.auth-story {
+  position: relative; isolation: isolate; background: var(--sky) url('../assets/images/pet-doodles.svg') center / cover;
+  border: 4px solid white; border-radius: 38px; color: var(--ink); padding: 38px;
+}
+.auth-story::after {
+  content: ''; position: absolute; z-index: -1; bottom: 0; left: 0; right: 0; height: 80px;
+  background: radial-gradient(ellipse at 50% 0, transparent 34px, white 35px) 0 0 / 90px 100% repeat-x;
+}
+.auth-story-label, .auth-story h1 span { color: #2f5263; }
+.auth-story h1 { color: #17262d; font-size: clamp(2rem, 3vw, 3rem); font-weight: 650; }
+.auth-story > p { color: #304d5a; line-height: 1.6; }
+.auth-pet-photo { height: 300px; margin: 26px 0 24px; }
+.auth-pet-photo > img { border: 6px solid #ffffffdc; border-radius: 48% 48% 35% 35%; object-position: 50% 34%; }
+.auth-pet-photo figcaption { border-radius: 999px; color: #354754; box-shadow: 0 5px 20px #304e6210; }
+.auth-story-footer, .auth-slideshow-toggle { color: #3a5664; }
+.auth-story-footer { position: relative; }
+.auth-content { max-width: none; padding: 38px; background: white; border: 3px solid #f7fcff; border-radius: 38px; }
+.auth-mode-label { background: #f6ecfd; border-color: #ecd8f7; color: #665174; margin-bottom: 24px; }
+.auth-eyebrow { color: #61717a; }
+.auth-title { color: #20242a; font-size: clamp(1.8rem, 2.5vw, 2.45rem); }
+.auth-field input { border-radius: 16px; background: #fbfdff; border-color: #dbe6ed; }
+.auth-field input:focus { border-color: #4c9ab7; }
+.auth-field input[aria-invalid="true"] { border-color: #ad324b; }
+.auth-password button { color: #34596b; border-radius: 999px; }
+.auth-password button:hover { background: var(--sky-light); }
+.auth-submit { background: #242729; border-radius: 999px; }
+.auth-submit:hover { background: #41464b; }
+.auth-recovery-link a, .auth-switch a, .auth-back { color: #315c70; }
+.auth-result { border: 1px solid #cde7f3; background: var(--sky-light); color: #315467; border-radius: 18px; }
+.auth-preview-note { background: #faf5fd; padding: 16px; border: 1px solid #eee2f6; border-radius: 18px; }
+.auth-preview-note strong { color: #665174; }
+
+/* Responsive / Composicion ligera en pantallas pequeñas */
+@media (max-width: 1100px) {
+  .dashboard-intro { min-height: 230px; }
+  .auth-content, .auth-story { padding: 28px; }
+  .auth-layout { gap: 20px; }
+}
+@media (max-width: 760px) {
+  .auth-header, .auth-layout, .auth-footer { width: calc(100% - 28px); }
+  .auth-layout { grid-template-columns: 1fr; }
+  .auth-content { grid-row: 1; border-radius: 28px; padding: 26px; max-width: 520px; }
+  .auth-story { border-radius: 28px; padding: 24px; }
+  .auth-story::after { display: none; }
+  .auth-story h1 { font-size: 1.65rem; }
+  .auth-pet-photo { height: 110px; margin: 0; }
+  .auth-pet-photo > img { border-radius: 50%; border-width: 3px; }
+  .auth-demo-link { padding: 10px 12px; font-size: .8rem; }
+  .dashboard-intro { padding: 24px; border-radius: 28px; min-height: 270px; align-items: flex-start; }
+  .dashboard-intro > div:first-child { max-width: 70%; }
+  .dashboard-intro h1 { font-size: 2.1rem; }
+  .dashboard-intro .muted { font-size: .875rem; }
+  .intro-pets { right: 14px; top: 30px; flex-direction: column; }
+  .intro-pets img { width: 70px; height: 82px; border-width: 3px; }
+  .intro-pets img + img { width: 55px; height: 55px; margin: -8px 0 0 16px; }
+  .dashboard-intro #open-form { margin-top: 8px; }
+  .pet-details { gap: 10px; }
+  .pet-details > div { padding: 12px; }
+  .card, .pet-strip { border-radius: 24px; }
+  #account-name { padding: 8px 12px; }
+  dialog { padding: 22px; border-radius: 26px; }
+}
+@media (max-width: 360px) {
+  .auth-content { padding: 20px; }
+  .auth-header { gap: 8px; }
+  .brand small { font-size: .5rem; }
+  .dashboard-intro { padding: 20px; }
+  .dashboard-intro h1 { font-size: 1.85rem; }
+  .intro-pets { right: 8px; }
+  .intro-pets img { width: 58px; height: 70px; }
+}
+@media (prefers-reduced-motion: reduce) { .button { transition: none; } }
+
+/* Frecuencia cardiaca / Latido decorativo, independiente de la lectura */
+.pulse-heart {
+  transform-origin: center;
+  animation: heart-beat 1.2s ease-in-out infinite;
+}
+@keyframes heart-beat {
+  0%, 45%, 100% { transform: scale(1); }
+  12% { transform: scale(1.12); }
+  24% { transform: scale(1); }
+  34% { transform: scale(1.07); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-heart { animation: none; }
+}
+
+/* Identidad / Logo propio y tarjetas de seleccion de mascotas */
+.brand > .brand-logo { border: 0; border-radius: 14px; box-shadow: none; object-fit: contain; }
+.pet-card-list { display: flex; flex-wrap: wrap; gap: 12px; }
+.pet-choice-card {
+  display: inline-flex; align-items: center; gap: 12px; max-width: 100%; min-height: 72px;
+  padding: 7px 22px 7px 7px; background: #e9f6fb; color: #253d4b;
+  border: 2px solid #d4edf7; border-radius: 999px; text-align: left; font-weight: 650;
+  transition: background-color .18s, border-color .18s, transform .18s;
+}
+.pet-choice-card:nth-child(3n + 2) { background: #f4e9fc; border-color: #ead9f5; }
+.pet-choice-card:nth-child(3n) { background: #fff3e3; border-color: #f6e5cc; }
+.pet-choice-card img { width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; object-fit: cover; border: 3px solid white; }
+.pet-choice-card span { overflow-wrap: anywhere; min-width: 0; }
+.pet-choice-card:hover { transform: translateY(-2px); border-color: #91cfe5; }
+.pet-choice-card[aria-pressed="true"] { background: #242729; border-color: #242729; color: white; }
+.pet-choice-card[aria-pressed="true"] img { border-color: #98d7eb; }
+@media (max-width: 480px) {
+  .pet-card-list { gap: 8px; }
+  .pet-choice-card { gap: 8px; padding-right: 15px; min-height: 62px; font-size: .875rem; }
+  .pet-choice-card img { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .pet-choice-card { transition: none; } }
+
+/* ==================================================
+   Rastreo / Acceso destacado y resumen del recorrido
+   ================================================== */
+.tracking-launch {
+  position: absolute; left: 16px; bottom: 18px; z-index: 500;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 22px; border-radius: 999px; border: 3px solid white;
+  background: #98d7eb; color: #20242a; font-weight: 750;
+  box-shadow: 0 5px 18px #253d4b30;
+}
+.tracking-launch span { font-size: 1.8rem; line-height: 1; }
+.tracking-launch:hover { background: #edd9fa; }
+.tracking-launch:disabled { opacity: .6; cursor: not-allowed; }
+.tracking-summary { padding: 20px 24px; background: #fff1f3; border-bottom: 1px solid #f3d7dd; }
+.tracking-summary p { margin-bottom: 14px; color: #74323e; }
+#tracking-dialog { width: min(520px, calc(100% - 28px)); }
+#tracking-dialog input { width: 100%; min-width: 0; margin-bottom: 14px; }
+#tracking-dialog .dialog-actions { flex-wrap: wrap; gap: 12px; }
+
+/* Historial de ubicaciones / Tarjetas de movimientos */
+.location-history-toolbar { padding: 16px 24px; background: #e6f6fc; }
+#location-history-dialog { width: min(560px, calc(100% - 28px)); }
+.location-history-list { display: grid; gap: 12px; }
+.location-history-item {
+  display: grid; gap: 8px; width: 100%; text-align: left;
+  padding: 18px; border: 2px solid #d4edf7; border-radius: 22px;
+  background: #eaf7fc; color: #253d4b; overflow-wrap: anywhere;
+}
+.location-history-item:nth-child(even) { background: #f4e9fc; border-color: #ead9f5; }
+.location-history-item:hover { border-color: #253d4b; }
+.location-history-item small { font-weight: 650; }
+
+/* Vista exclusiva del mapa / Fondo gris y bloqueo del resto de la pagina */
+.map-focus-backdrop {
+  position: fixed; inset: 0; z-index: 1200;
+  background: rgb(48 54 60 / 48%); cursor: default;
+}
+.map-card.map-focused {
+  position: relative; z-index: 1201; isolation: isolate;
+  scroll-margin-top: 16px;
+  box-shadow: 0 12px 48px #20242a40;
+}
+.map-muted { filter: grayscale(1); }
+
+/* ==================================================
+   Movil / Controles tactiles y ventanas con altura disponible
+   ================================================== */
+dialog { overflow-y: auto; overscroll-behavior: contain; }
+@media (max-width: 760px) {
+  input, select, textarea { font-size: 16px; }
+  .button, .close-button, .map-center, .tracking-launch { min-height: 44px; }
+  .close-button { min-width: 44px; flex-shrink: 0; }
+  .tracking-summary, .location-history-toolbar { padding: 16px; }
+  .tracking-summary > .flex { display: grid; grid-template-columns: 1fr; }
+  .tracking-summary .button, .location-history-toolbar .button { width: 100%; white-space: normal; }
+  .coordinate-grid { padding: 18px; gap: 12px; }
+  .coordinate-grid > div { min-width: 0; overflow-wrap: anywhere; }
+  #tracking-dialog, #location-history-dialog { max-height: calc(100dvh - 24px); }
+  .location-history-item { padding: 16px; }
+  .map-card.map-focused { scroll-margin-top: max(12px, env(safe-area-inset-top)); }
+}
+@media (max-width: 760px) and (orientation: landscape) {
+  .map-wrap { height: max(220px, 65dvh); }
+}
+
+/* Acceso / Evita mostrar el panel antes de verificar la sesion */
+html.session-pending body { visibility: hidden; }
